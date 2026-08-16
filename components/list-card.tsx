@@ -89,7 +89,7 @@ export function ListCard({
   }, [rowMenuOpen]);
 
   return (
-    <section className="flex min-w-0 flex-col rounded-3xl border border-border bg-card/70 p-3 backdrop-blur-sm sm:p-4">
+    <section className="flex h-fit min-w-0 flex-col self-start rounded-3xl border border-border bg-card/70 p-3 backdrop-blur-sm sm:p-4">
       {/* header */}
       <header className="flex items-center gap-2 px-1 pb-3">
         {/* editable title */}
@@ -135,11 +135,16 @@ export function ListCard({
 
       {/* items */}
       <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-        <SortableContext items={visible.map((i) => i.id)} strategy={verticalListSortingStrategy}>
+        <SortableContext
+          items={visible.map((i) => i.id)}
+          strategy={verticalListSortingStrategy}
+        >
           <div className="flex flex-col gap-1.5">
             {visible.length === 0 ? (
               <p className="rounded-full bg-secondary/50 px-4 py-3 text-center font-mono text-xs text-muted-foreground">
-                {list.items.length === 0 ? "No items yet." : `No ${filter} items.`}
+                {list.items.length === 0
+                  ? "No items yet."
+                  : `No ${filter} items.`}
               </p>
             ) : (
               visible.map((item) => (

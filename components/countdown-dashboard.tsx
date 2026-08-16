@@ -10,10 +10,7 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import {
   type AppState,
   type ClockFormat,
@@ -335,11 +332,11 @@ export function CountdownDashboard() {
         <DndContext sensors={sensors} onDragEnd={handleListDragEnd}>
           <SortableContext
             items={state.lists.map((l) => l.id)}
-            strategy={verticalListSortingStrategy}
+            strategy={rectSortingStrategy}
           >
             <div
               className={cn(
-                "grid grid-cols-1 items-start gap-4",
+                "grid auto-rows-max grid-cols-1 items-start gap-4",
                 singleList ? "" : "lg:grid-cols-2",
               )}
             >
