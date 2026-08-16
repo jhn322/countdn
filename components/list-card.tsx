@@ -2,6 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Plus, Trash2 } from "lucide-react";
+import {
+  DndContext,
+  DragEndEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { cn } from "@/lib/utils";
 import {
   type ClockFormat,
@@ -10,7 +21,8 @@ import {
   type TodoList,
   isDisabled,
 } from "@/lib/types";
-import { ListItemRow } from "@/components/list-item-row";
+import { useDndListItems } from "@/lib/use-dnd-list-items";
+import { SortableListItemRow } from "@/components/sortable-list-item-row";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 
 type Props = {
@@ -25,6 +37,7 @@ type Props = {
   onItemTextChange: (itemId: string, text: string) => void;
   onItemDurationChange: (itemId: string, ms: number) => void;
   onDeleteItem: (itemId: string) => void;
+  onReorderItems: (newItems: ListItem[]) => void;
 };
 
 const ROW_COUNTS = [3, 5, 10];
@@ -47,6 +60,7 @@ export function ListCard({
   onItemTextChange,
   onItemDurationChange,
   onDeleteItem,
+  onReorderItems,
 }: Props) {
   const disabledCount = list.items.filter((i) => isDisabled(i, now)).length;
   const activeCount = list.items.length - disabledCount;
@@ -56,6 +70,13 @@ export function ListCard({
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [rowMenuOpen, setRowMenuOpen] = useState(false);
   const rowMenuRef = useRef<HTMLDivElement>(null);
+
+  // Drag and drop setup
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+  );
+
+  const handleDragEnd = useDndListItems(list.items, onReorderItems);
 
   useEffect(() => {
     if (!rowMenuOpen) return;
@@ -113,26 +134,30 @@ export function ListCard({
       </header>
 
       {/* items */}
-      <div className="flex flex-col gap-1.5">
-        {visible.length === 0 ? (
-          <p className="rounded-full bg-secondary/50 px-4 py-3 text-center font-mono text-xs text-muted-foreground">
-            {list.items.length === 0 ? "No items yet." : `No ${filter} items.`}
-          </p>
-        ) : (
-          visible.map((item) => (
-            <ListItemRow
-              key={item.id}
-              item={item}
-              now={now}
-              clock={clock}
-              onToggle={() => onToggleItem(item.id)}
-              onTextChange={(text) => onItemTextChange(item.id, text)}
-              onDurationChange={(ms) => onItemDurationChange(item.id, ms)}
-              onDelete={() => onDeleteItem(item.id)}
-            />
-          ))
-        )}
-      </div>
+      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+        <SortableContext items={visible.map((i) => i.id)} strategy={verticalListSortingStrategy}>
+          <div className="flex flex-col gap-1.5">
+            {visible.length === 0 ? (
+              <p className="rounded-full bg-secondary/50 px-4 py-3 text-center font-mono text-xs text-muted-foreground">
+                {list.items.length === 0 ? "No items yet." : `No ${filter} items.`}
+              </p>
+            ) : (
+              visible.map((item) => (
+                <SortableListItemRow
+                  key={item.id}
+                  item={item}
+                  now={now}
+                  clock={clock}
+                  onToggle={() => onToggleItem(item.id)}
+                  onTextChange={(text) => onItemTextChange(item.id, text)}
+                  onDurationChange={(ms) => onItemDurationChange(item.id, ms)}
+                  onDelete={() => onDeleteItem(item.id)}
+                />
+              ))
+            )}
+          </div>
+        </SortableContext>
+      </DndContext>
 
       {/* add row(s) — split control */}
       <div className="mt-2 flex items-stretch gap-1.5">

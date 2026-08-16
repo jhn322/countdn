@@ -4,9 +4,22 @@ import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import {
+  DndContext,
+  DragEndEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import {
   type AppState,
   type ClockFormat,
   type FilterMode,
+  type ListItem,
+  type TodoList,
   isDisabled,
 } from "@/lib/types";
 import {
@@ -17,7 +30,8 @@ import {
   uid,
 } from "@/lib/presets";
 import { useLocalStorage } from "@/lib/use-local-storage";
-import { ListCard } from "@/components/list-card";
+import { useDndLists } from "@/lib/use-dnd-lists";
+import { SortableListCard } from "@/components/sortable-list-card";
 import { AddListMenu } from "@/components/add-list-menu";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -150,6 +164,21 @@ export function CountdownDashboard() {
   function setClock(clock: ClockFormat) {
     setState((prev) => ({ ...prev, clock }));
   }
+
+  function reorderLists(newLists: TodoList[]) {
+    setState((prev) => ({ ...prev, lists: newLists }));
+  }
+
+  function reorderItems(listId: string, newItems: ListItem[]) {
+    updateList(listId, (l) => ({ ...l, items: newItems }));
+  }
+
+  // Drag and drop setup for cards
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+  );
+
+  const handleListDragEnd = useDndLists(state.lists, reorderLists);
 
   // fall back gracefully for state saved before the clock setting existed
   const clock: ClockFormat = state.clock ?? "24h";
@@ -303,33 +332,45 @@ export function CountdownDashboard() {
           </p>
         </div>
       ) : (
-        <div
-          className={cn(
-            "grid grid-cols-1 items-start gap-4",
-            singleList ? "" : "lg:grid-cols-2",
-          )}
-        >
-          {state.lists.map((list) => (
-            <ListCard
-              key={list.id}
-              list={list}
-              now={now}
-              filter={filter}
-              clock={clock}
-              onTitleChange={(title) => setListTitle(list.id, title)}
-              onAddRow={(count) => addRow(list.id, count)}
-              onDeleteList={() => deleteList(list.id)}
-              onToggleItem={(itemId) => toggleItem(list.id, itemId)}
-              onItemTextChange={(itemId, text) =>
-                setItemText(list.id, itemId, text)
-              }
-              onItemDurationChange={(itemId, ms) =>
-                setItemDuration(list.id, itemId, ms)
-              }
-              onDeleteItem={(itemId) => deleteItem(list.id, itemId)}
-            />
-          ))}
-        </div>
+        <DndContext sensors={sensors} onDragEnd={handleListDragEnd}>
+          <SortableContext
+            items={state.lists.map((l) => l.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <div
+              className={cn(
+                "grid grid-cols-1 items-start gap-4",
+                singleList ? "" : "lg:grid-cols-2",
+              )}
+            >
+              {state.lists.map((list) => (
+                <SortableListCard
+                  key={list.id}
+                  list={list}
+                  now={now}
+                  filter={filter}
+                  clock={clock}
+                  onTitleChange={(title: string) =>
+                    setListTitle(list.id, title)
+                  }
+                  onAddRow={(count: number) => addRow(list.id, count)}
+                  onDeleteList={() => deleteList(list.id)}
+                  onToggleItem={(itemId: string) => toggleItem(list.id, itemId)}
+                  onItemTextChange={(itemId: string, text: string) =>
+                    setItemText(list.id, itemId, text)
+                  }
+                  onItemDurationChange={(itemId: string, ms: number) =>
+                    setItemDuration(list.id, itemId, ms)
+                  }
+                  onDeleteItem={(itemId: string) => deleteItem(list.id, itemId)}
+                  onReorderItems={(newItems: ListItem[]) =>
+                    reorderItems(list.id, newItems)
+                  }
+                />
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
       )}
 
       <footer className="mt-10 text-center font-mono text-[10px] uppercase tracking-widest text-muted-foreground">

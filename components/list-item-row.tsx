@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Check, Copy, Trash2 } from "lucide-react";
+import { Check, Copy, GripVertical, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   type ClockFormat,
@@ -21,6 +21,8 @@ type Props = {
   onTextChange: (text: string) => void;
   onDurationChange: (ms: number) => void;
   onDelete: () => void;
+  isDragging?: boolean;
+  dragHandleProps?: React.HTMLAttributes<HTMLButtonElement>;
 };
 
 export function ListItemRow({
@@ -31,6 +33,8 @@ export function ListItemRow({
   onTextChange,
   onDurationChange,
   onDelete,
+  isDragging = false,
+  dragHandleProps,
 }: Props) {
   const disabled = isDisabled(item, now);
   const remaining = remainingMs(item, now);
@@ -55,12 +59,29 @@ export function ListItemRow({
   return (
     <div
       className={cn(
-        "group flex items-center gap-2 rounded-full border px-2 py-1.5 transition-colors sm:gap-2.5 sm:px-2.5",
+        "group flex items-center gap-2 rounded-full border px-2 py-1.5 transition-all sm:gap-2.5 sm:px-2.5",
+        isDragging && "opacity-50",
         disabled
           ? "border-transparent bg-secondary/60"
           : "border-border bg-card hover:border-foreground/30",
       )}
     >
+      {/* drag handle */}
+      {dragHandleProps && (
+        <button
+          type="button"
+          {...dragHandleProps}
+          aria-label="Drag to reorder item"
+          title="Drag to reorder"
+          className={cn(
+            "flex size-6 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors",
+            "cursor-grab active:cursor-grabbing hover:text-foreground",
+          )}
+        >
+          <GripVertical className="size-3.5" aria-hidden="true" />
+        </button>
+      )}
+
       {/* checkbox */}
       <button
         type="button"
@@ -158,7 +179,7 @@ export function ListItemRow({
         onClick={onDelete}
         aria-label="Delete item"
         title="Delete"
-        className="flex size-7 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors transition-opacity hover:bg-destructive hover:text-background focus-visible:opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:focus-visible:opacity-100"
+        className="flex size-7 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-opacity hover:bg-destructive hover:text-background focus-visible:opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:focus-visible:opacity-100"
       >
         <Trash2 className="size-3.5" aria-hidden="true" />
       </button>
