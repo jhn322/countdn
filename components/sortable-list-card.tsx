@@ -49,9 +49,15 @@ export function SortableListCard({
   } = useSortable({ id: list.id });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
+    width: "100%",
+    height: "fit-content",
+    alignSelf: "start" as const,
+    justifySelf: "stretch" as const,
+    position: "relative" as const,
+    zIndex: isDragging ? 20 : 0,
   };
 
   return (
@@ -60,7 +66,7 @@ export function SortableListCard({
       style={style}
       {...attributes}
       {...listeners}
-      className="cursor-grab active:cursor-grabbing"
+      className="w-full cursor-grab active:cursor-grabbing"
     >
       <ListCard
         list={list}

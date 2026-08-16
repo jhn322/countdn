@@ -2,10 +2,7 @@
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import {
-  type ClockFormat,
-  type ListItem,
-} from "@/lib/types";
+import { type ClockFormat, type ListItem } from "@/lib/types";
 import { ListItemRow } from "@/components/list-item-row";
 
 type Props = {
