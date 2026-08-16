@@ -19,21 +19,9 @@ export const metadata: Metadata = {
     "A monochrome dashboard for tracking active / disabled items with 24h countdown cooldowns. Saved locally.",
   generator: "countdn.app",
   icons: {
-    icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
-    ],
+    icon: "/favicon.png",
     apple: "/apple-icon.png",
+    shortcut: "/favicon.png",
   },
 };
 
