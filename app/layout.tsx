@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Countdn — status & timer dashboard",
+  title: "Countdn status & cooldown monitoring",
   description:
     "A monochrome dashboard for tracking active / disabled items with 24h countdown cooldowns. Saved locally.",
   generator: "countdn.app",
