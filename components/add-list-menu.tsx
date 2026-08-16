@@ -1,33 +1,34 @@
-'use client'
+"use client";
 
-import { useEffect, useRef, useState } from 'react'
-import { Plus } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { LIST_PRESETS, type ListPreset } from '@/lib/presets'
+import { useEffect, useRef, useState } from "react";
+import { Plus } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { LIST_PRESETS, type ListPreset } from "@/lib/presets";
 
 type Props = {
-  onSelect: (preset: ListPreset) => void
-}
+  onSelect: (preset: ListPreset) => void;
+};
 
 export function AddListMenu({ onSelect }: Props) {
-  const [open, setOpen] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!open) return
-    function onDoc(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setOpen(false)
-    }
-    document.addEventListener('mousedown', onDoc)
-    document.addEventListener('keydown', onKey)
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
     return () => {
-      document.removeEventListener('mousedown', onDoc)
-      document.removeEventListener('keydown', onKey)
-    }
-  }, [open])
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
 
   return (
     <div ref={ref} className="relative">
@@ -35,7 +36,7 @@ export function AddListMenu({ onSelect }: Props) {
         type="button"
         onClick={() => setOpen((o) => !o)}
         className={cn(
-          'inline-flex items-center gap-1.5 rounded-full bg-primary px-3.5 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90',
+          "inline-flex items-center gap-1.5 rounded-full bg-primary px-3.5 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90",
         )}
         aria-haspopup="menu"
         aria-expanded={open}
@@ -58,8 +59,8 @@ export function AddListMenu({ onSelect }: Props) {
               type="button"
               role="menuitem"
               onClick={() => {
-                onSelect(preset)
-                setOpen(false)
+                onSelect(preset);
+                setOpen(false);
               }}
               className="flex w-full flex-col items-start gap-0.5 rounded-xl px-2.5 py-2 text-left transition-colors hover:bg-accent"
             >
@@ -74,5 +75,5 @@ export function AddListMenu({ onSelect }: Props) {
         </div>
       )}
     </div>
-  )
+  );
 }

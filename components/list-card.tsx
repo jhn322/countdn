@@ -42,11 +42,11 @@ type Props = {
 
 const ROW_COUNTS = [3, 5, 10];
 
-function matchesFilter(item: ListItem, now: number, filter: FilterMode) {
+const matchesFilter = (item: ListItem, now: number, filter: FilterMode) => {
   if (filter === "all") return true;
   const disabled = isDisabled(item, now);
   return filter === "disabled" ? disabled : !disabled;
-}
+};
 
 export function ListCard({
   list,
@@ -80,10 +80,10 @@ export function ListCard({
 
   useEffect(() => {
     if (!rowMenuOpen) return;
-    function onDoc(e: MouseEvent) {
+    const onDoc = (e: MouseEvent) => {
       if (rowMenuRef.current && !rowMenuRef.current.contains(e.target as Node))
         setRowMenuOpen(false);
-    }
+    };
     document.addEventListener("mousedown", onDoc);
     return () => document.removeEventListener("mousedown", onDoc);
   }, [rowMenuOpen]);

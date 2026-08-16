@@ -47,14 +47,14 @@ export function ListItemRow({
     return () => clearTimeout(t);
   }, [copied]);
 
-  async function copyText() {
+  const copyText = async () => {
     try {
       await navigator.clipboard.writeText(item.text);
       setCopied(true);
     } catch {
       setCopied(false);
     }
-  }
+  };
 
   return (
     <div

@@ -42,14 +42,14 @@ const FILTERS: { key: FilterMode; label: string }[] = [
   { key: "disabled", label: "Disabled" },
 ];
 
-function initialState(): AppState {
+const initialState = (): AppState => {
   return {
     version: 1,
     defaultDurationMs: DEFAULT_DURATION_MS,
     clock: "24h",
     lists: starterState(),
   };
-}
+};
 
 export function CountdownDashboard() {
   const [state, setState, hydrated] = useLocalStorage<AppState>(
@@ -79,26 +79,26 @@ export function CountdownDashboard() {
   }, [state.lists, now]);
 
   // ---- mutations -------------------------------------------------------
-  function mapLists(fn: (lists: AppState["lists"]) => AppState["lists"]) {
+  const mapLists = (fn: (lists: AppState["lists"]) => AppState["lists"]) => {
     setState((prev) => ({ ...prev, lists: fn(prev.lists) }));
-  }
+  };
 
-  function updateList(
+  const updateList = (
     listId: string,
     fn: (l: AppState["lists"][number]) => AppState["lists"][number],
-  ) {
+  ) => {
     mapLists((lists) => lists.map((l) => (l.id === listId ? fn(l) : l)));
-  }
+  };
 
-  function addListFromPreset(preset: ListPreset) {
+  const addListFromPreset = (preset: ListPreset) => {
     mapLists((lists) => [...lists, preset.build()]);
-  }
+  };
 
-  function deleteList(listId: string) {
+  const deleteList = (listId: string) => {
     mapLists((lists) => lists.filter((l) => l.id !== listId));
-  }
+  };
 
-  function addRow(listId: string, count = 1) {
+  const addRow = (listId: string, count = 1) => {
     const n = Math.max(1, Math.min(50, Math.floor(count)));
     updateList(listId, (l) => ({
       ...l,
@@ -112,9 +112,9 @@ export function CountdownDashboard() {
         })),
       ],
     }));
-  }
+  };
 
-  function toggleItem(listId: string, itemId: string) {
+  const toggleItem = (listId: string, itemId: string) => {
     const t = Date.now();
     updateList(listId, (l) => ({
       ...l,
@@ -125,50 +125,50 @@ export function CountdownDashboard() {
         return { ...it, startedAt: currentlyDisabled ? null : t };
       }),
     }));
-  }
+  };
 
-  function setItemText(listId: string, itemId: string, text: string) {
+  const setItemText = (listId: string, itemId: string, text: string) => {
     updateList(listId, (l) => ({
       ...l,
       items: l.items.map((it) => (it.id === itemId ? { ...it, text } : it)),
     }));
-  }
+  };
 
-  function setItemDuration(listId: string, itemId: string, ms: number) {
+  const setItemDuration = (listId: string, itemId: string, ms: number) => {
     updateList(listId, (l) => ({
       ...l,
       items: l.items.map((it) =>
         it.id === itemId ? { ...it, durationMs: ms } : it,
       ),
     }));
-  }
+  };
 
-  function deleteItem(listId: string, itemId: string) {
+  const deleteItem = (listId: string, itemId: string) => {
     updateList(listId, (l) => ({
       ...l,
       items: l.items.filter((it) => it.id !== itemId),
     }));
-  }
+  };
 
-  function setListTitle(listId: string, title: string) {
+  const setListTitle = (listId: string, title: string) => {
     updateList(listId, (l) => ({ ...l, title }));
-  }
+  };
 
-  function setDefaultDuration(ms: number) {
+  const setDefaultDuration = (ms: number) => {
     setState((prev) => ({ ...prev, defaultDurationMs: ms }));
-  }
+  };
 
-  function setClock(clock: ClockFormat) {
+  const setClock = (clock: ClockFormat) => {
     setState((prev) => ({ ...prev, clock }));
-  }
+  };
 
-  function reorderLists(newLists: TodoList[]) {
+  const reorderLists = (newLists: TodoList[]) => {
     setState((prev) => ({ ...prev, lists: newLists }));
-  }
+  };
 
-  function reorderItems(listId: string, newItems: ListItem[]) {
+  const reorderItems = (listId: string, newItems: ListItem[]) => {
     updateList(listId, (l) => ({ ...l, items: newItems }));
-  }
+  };
 
   // Drag and drop setup for cards
   const sensors = useSensors(
@@ -379,7 +379,7 @@ export function CountdownDashboard() {
   );
 }
 
-function Stat({
+const Stat = ({
   label,
   value,
   solid,
@@ -387,7 +387,7 @@ function Stat({
   label: string;
   value: number;
   solid?: boolean;
-}) {
+}) => {
   return (
     <div
       className={cn(
@@ -410,4 +410,4 @@ function Stat({
       </span>
     </div>
   );
-}
+};

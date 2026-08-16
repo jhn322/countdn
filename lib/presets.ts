@@ -21,14 +21,14 @@ export function uid(): string {
   );
 }
 
-function makeItems(texts: string[], durationMs: number) {
+const makeItems = (texts: string[], durationMs: number) => {
   return texts.map((text) => ({
     id: uid(),
     text,
     durationMs,
     startedAt: null,
   }));
-}
+};
 
 /** Pre-made list templates the user can drop in. */
 export type ListPreset = {
