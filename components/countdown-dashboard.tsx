@@ -193,7 +193,7 @@ export function CountdownDashboard() {
               Countdn.
             </h1>
             <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
-              Status &amp; Cooldown for your tasks
+              Status &amp; Cooldown monitoring
             </p>
           </div>
           <div className="flex items-center gap-2">
