@@ -42,26 +42,13 @@ export const LIST_PRESETS: ListPreset[] = [
   {
     key: "daily",
     name: "Daily reset",
-    description: "Habits that free up every 24 hours.",
+    description: "Services that free up every 24 hours.",
     build: () => ({
       id: uid(),
       title: "Daily reset",
       items: makeItems(
-        ["Deep work block", "Workout", "Read 20 pages", "Inbox zero"],
+        ["ChatGPT", "Claude", "AI Studio", "Gemini", "Perplexity"],
         24 * HOUR,
-      ),
-    }),
-  },
-  {
-    key: "content",
-    name: "Content cooldowns",
-    description: "Re-post windows across channels.",
-    build: () => ({
-      id: uid(),
-      title: "Content cooldowns",
-      items: makeItems(
-        ["X / Twitter thread", "LinkedIn post", "Newsletter", "YouTube upload"],
-        48 * HOUR,
       ),
     }),
   },
@@ -73,8 +60,26 @@ export const LIST_PRESETS: ListPreset[] = [
       id: uid(),
       title: "Game timers",
       items: makeItems(
-        ["Daily quests", "Raid lockout", "Weekly vault", "Arena tickets"],
+        ["Daily quests", "Raid lockout", "Weekly vault", "Steam sale"],
         7 * DAY,
+      ),
+    }),
+  },
+  {
+    key: "content",
+    name: "Content cooldowns",
+    description: "Re-post windows across channels.",
+    build: () => ({
+      id: uid(),
+      title: "Content cooldowns",
+      items: makeItems(
+        [
+          "Twitter thread",
+          "LinkedIn post",
+          "Instagram story",
+          "YouTube upload",
+        ],
+        48 * HOUR,
       ),
     }),
   },

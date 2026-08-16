@@ -1,41 +1,41 @@
-'use client'
+"use client";
 
-import { useEffect, useRef } from 'react'
-import { AlertTriangle } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { useEffect, useRef } from "react";
+import { AlertTriangle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type Props = {
-  open: boolean
-  title: string
-  description: string
-  confirmLabel?: string
-  cancelLabel?: string
-  onConfirm: () => void
-  onCancel: () => void
-}
+  open: boolean;
+  title: string;
+  description: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+};
 
 export function ConfirmDialog({
   open,
   title,
   description,
-  confirmLabel = 'Delete',
-  cancelLabel = 'Cancel',
+  confirmLabel = "Delete",
+  cancelLabel = "Cancel",
   onConfirm,
   onCancel,
 }: Props) {
-  const confirmRef = useRef<HTMLButtonElement>(null)
+  const confirmRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (!open) return
-    confirmRef.current?.focus()
+    if (!open) return;
+    confirmRef.current?.focus();
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') onCancel()
+      if (e.key === "Escape") onCancel();
     }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [open, onCancel])
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open, onCancel]);
 
-  if (!open) return null
+  if (!open) return null;
 
   return (
     <div
@@ -84,8 +84,8 @@ export function ConfirmDialog({
             type="button"
             onClick={onConfirm}
             className={cn(
-              'rounded-full bg-disabled px-4 py-2 font-mono text-xs uppercase tracking-widest text-background transition-opacity hover:opacity-90',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+              "rounded-full bg-disabled px-4 py-2 font-mono text-xs uppercase tracking-widest text-background transition-opacity hover:opacity-90",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
             )}
           >
             {confirmLabel}
@@ -93,5 +93,5 @@ export function ConfirmDialog({
         </div>
       </div>
     </div>
-  )
+  );
 }
