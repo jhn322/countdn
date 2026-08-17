@@ -7,6 +7,7 @@ A modern countdown timer dashboard to keep track of your services that are curre
 - Multiple countdown lists with drag-and-drop organization
 - Preset duration options for fast timer creation
 - Local storage persistence
+- Import/export lists with JSON file
 - Dark/light theme toggle
 - Responsive design with smooth animations
 
