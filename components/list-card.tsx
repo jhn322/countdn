@@ -39,7 +39,6 @@ type Props = {
   onItemDurationChange: (itemId: string, ms: number) => void;
   onDeleteItem: (itemId: string) => void;
   onReorderItems: (newItems: ListItem[]) => void;
-  onImportList: (list: TodoList) => void;
 };
 
 const ROW_COUNTS = [3, 5, 10];
@@ -63,7 +62,6 @@ export function ListCard({
   onItemDurationChange,
   onDeleteItem,
   onReorderItems,
-  onImportList,
 }: Props) {
   const disabledCount = list.items.filter((i) => isDisabled(i, now)).length;
   const activeCount = list.items.length - disabledCount;
@@ -125,7 +123,7 @@ export function ListCard({
           />
           {disabledCount}
         </span>
-        <ImportExportMenu list={list} onImport={onImportList} />
+        <ImportExportMenu list={list} />
         <button
           type="button"
           onClick={() => setConfirmOpen(true)}

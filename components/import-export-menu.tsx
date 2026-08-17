@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Download, Upload, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { type TodoList } from "@/lib/types";
@@ -8,7 +8,6 @@ import { uid } from "@/lib/presets";
 
 type Props = {
   list: TodoList;
-  onImport: (list: TodoList) => void;
 };
 
 function exportList(list: TodoList) {
@@ -63,32 +62,12 @@ export function parseImportFile(raw: string): TodoList {
   };
 }
 
-export function ImportExportMenu({ list, onImport }: Props) {
+export function ImportExportMenu({ list }: Props) {
   const [open, setOpen] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
 
   const handleExport = () => {
     exportList(list);
     setOpen(false);
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      try {
-        const parsed = parseImportFile(ev.target?.result as string);
-        onImport(parsed);
-        setError(null);
-        setOpen(false);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Invalid file.");
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = "";
   };
 
   return (
@@ -97,8 +76,8 @@ export function ImportExportMenu({ list, onImport }: Props) {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        aria-label="Import / export list"
-        title="Import / export"
+        aria-label="Export list"
+        title="Export list"
         className={cn(
           "flex size-7 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors",
           open
@@ -115,10 +94,7 @@ export function ImportExportMenu({ list, onImport }: Props) {
           <div
             className="fixed inset-0 z-20"
             aria-hidden="true"
-            onClick={() => {
-              setOpen(false);
-              setError(null);
-            }}
+            onClick={() => setOpen(false)}
           />
 
           <div
@@ -131,12 +107,9 @@ export function ImportExportMenu({ list, onImport }: Props) {
               </p>
               <button
                 type="button"
-                onClick={() => {
-                  setOpen(false);
-                  setError(null);
-                }}
+                onClick={() => setOpen(false)}
                 aria-label="Close menu"
-                className="flex size-5 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                className="flex size-5 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               >
                 <X className="size-3" />
               </button>
@@ -160,40 +133,6 @@ export function ImportExportMenu({ list, onImport }: Props) {
                 </span>
               </div>
             </button>
-
-            {/* Import */}
-            <button
-              type="button"
-              role="menuitem"
-              onClick={() => fileRef.current?.click()}
-              className="flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-left font-mono text-xs transition-colors hover:bg-accent"
-            >
-              <Upload
-                className="size-3.5 shrink-0 text-muted-foreground"
-                aria-hidden="true"
-              />
-              <div>
-                <span className="block text-foreground">Import list</span>
-                <span className="block text-[10px] text-muted-foreground">
-                  Adds as a new card
-                </span>
-              </div>
-            </button>
-
-            {error && (
-              <p className="mt-1 rounded-xl bg-destructive/10 px-2.5 py-2 font-mono text-[10px] text-destructive">
-                {error}
-              </p>
-            )}
-
-            <input
-              ref={fileRef}
-              type="file"
-              accept="application/json,.json"
-              className="sr-only"
-              onChange={handleFileChange}
-              aria-hidden="true"
-            />
           </div>
         </>
       )}

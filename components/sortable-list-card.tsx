@@ -23,7 +23,6 @@ type Props = {
   onItemDurationChange: (itemId: string, ms: number) => void;
   onDeleteItem: (itemId: string) => void;
   onReorderItems: (newItems: ListItem[]) => void;
-  onImportList: (list: TodoList) => void;
 };
 
 export function SortableListCard({
@@ -39,7 +38,6 @@ export function SortableListCard({
   onItemDurationChange,
   onDeleteItem,
   onReorderItems,
-  onImportList,
 }: Props) {
   const {
     attributes,
@@ -83,7 +81,6 @@ export function SortableListCard({
         onItemDurationChange={onItemDurationChange}
         onDeleteItem={onDeleteItem}
         onReorderItems={onReorderItems}
-        onImportList={onImportList}
       />
     </div>
   );
