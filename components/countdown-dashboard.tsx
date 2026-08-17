@@ -31,6 +31,7 @@ import { useDndLists } from "@/lib/use-dnd-lists";
 import { SortableListCard } from "@/components/sortable-list-card";
 import { AddListMenu } from "@/components/add-list-menu";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { QuickNotes } from "@/components/quick-notes";
 import { Upload } from "lucide-react";
 import { parseImportFile } from "@/components/import-export-menu";
 
@@ -411,6 +412,9 @@ export function CountdownDashboard() {
           Saved locally · JS &copy; {new Date().getFullYear()}
         </p>
       </footer>
+
+      {/* Quick-notes floating panel */}
+      <QuickNotes />
     </div>
   );
 }
