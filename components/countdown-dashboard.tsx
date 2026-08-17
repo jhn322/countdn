@@ -98,6 +98,10 @@ export function CountdownDashboard() {
     mapLists((lists) => lists.filter((l) => l.id !== listId));
   };
 
+  const importList = (list: TodoList) => {
+    mapLists((lists) => [...lists, list]);
+  };
+
   const addRow = (listId: string, count = 1) => {
     const n = Math.max(1, Math.min(50, Math.floor(count)));
     updateList(listId, (l) => ({
@@ -363,6 +367,7 @@ export function CountdownDashboard() {
                   onReorderItems={(newItems: ListItem[]) =>
                     reorderItems(list.id, newItems)
                   }
+                  onImportList={importList}
                 />
               ))}
             </div>
