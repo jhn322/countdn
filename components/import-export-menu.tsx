@@ -26,7 +26,7 @@ function exportList(list: TodoList) {
 }
 
 /** Returns a cleaned TodoList or throws. */
-function parseImport(raw: string): TodoList {
+export function parseImportFile(raw: string): TodoList {
   const data = JSON.parse(raw);
 
   if (typeof data !== "object" || data === null)
@@ -79,7 +79,7 @@ export function ImportExportMenu({ list, onImport }: Props) {
     const reader = new FileReader();
     reader.onload = (ev) => {
       try {
-        const parsed = parseImport(ev.target?.result as string);
+        const parsed = parseImportFile(ev.target?.result as string);
         onImport(parsed);
         setError(null);
         setOpen(false);

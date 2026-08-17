@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import {
@@ -31,6 +31,8 @@ import { useDndLists } from "@/lib/use-dnd-lists";
 import { SortableListCard } from "@/components/sortable-list-card";
 import { AddListMenu } from "@/components/add-list-menu";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Upload } from "lucide-react";
+import { parseImportFile } from "@/components/import-export-menu";
 
 const MotionSpan: any = motion.span;
 
@@ -57,6 +59,7 @@ export function CountdownDashboard() {
     initialState,
   );
   const [filter, setFilter] = useState<FilterMode>("all");
+  const emptyImportRef = useRef<HTMLInputElement>(null);
   const [now, setNow] = useState(() => Date.now());
 
   // 1s ticker to drive countdowns
@@ -329,8 +332,36 @@ export function CountdownDashboard() {
       ) : state.lists.length === 0 ? (
         <div className="rounded-3xl border border-dashed border-border p-12 text-center">
           <p className="font-mono text-sm text-muted-foreground">
-            No lists yet — create one from a preset.
+            No lists yet - create one from a preset by clicking on New list.
           </p>
+          <button
+            type="button"
+            onClick={() => emptyImportRef.current?.click()}
+            className="mt-4 inline-flex items-center gap-2 rounded-full border border-dashed border-border px-4 py-2 font-mono text-xs uppercase tracking-widest text-muted-foreground transition-colors hover:border-foreground hover:text-foreground"
+          >
+            <Upload className="size-3.5" aria-hidden="true" />
+            Import list from file
+          </button>
+          <input
+            ref={emptyImportRef}
+            type="file"
+            accept="application/json,.json"
+            className="sr-only"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              const reader = new FileReader();
+              reader.onload = (ev) => {
+                try {
+                  const parsed = parseImportFile(ev.target?.result as string);
+                  importList(parsed);
+                } catch {}
+              };
+              reader.readAsText(file);
+              e.target.value = "";
+            }}
+            aria-hidden="true"
+          />
         </div>
       ) : (
         <DndContext sensors={sensors} onDragEnd={handleListDragEnd}>
