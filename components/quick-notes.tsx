@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { PenLine, X, Maximize2, Minimize2 } from "lucide-react";
+import { PenLine, X, Maximize2, Minimize2, Copy, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLocalStorage } from "@/lib/use-local-storage";
 
@@ -13,6 +13,8 @@ export function QuickNotes() {
   const [expanded, setExpanded] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const [copied, setCopied] = useState(false);
+  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Focus textarea
   useEffect(() => {
@@ -30,6 +32,17 @@ export function QuickNotes() {
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
+
+  const copyText = async () => {
+    try {
+      await navigator.clipboard.writeText(notes);
+      setCopied(true);
+      if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+      copyTimeoutRef.current = setTimeout(() => setCopied(false), 1500);
+    } catch {
+      setCopied(false);
+    }
+  };
 
   const charCount = notes.length;
   const hasNotes = notes.trim().length > 0;
@@ -97,6 +110,19 @@ export function QuickNotes() {
             Quick Notes
           </span>
           <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={copyText}
+              aria-label="Copy notes to clipboard"
+              title="Copy to clipboard"
+              className="inline-flex size-6 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            >
+              {copied ? (
+                <Check className="size-3.5" aria-hidden="true" />
+              ) : (
+                <Copy className="size-3.5" aria-hidden="true" />
+              )}
+            </button>
             <button
               type="button"
               onClick={() => setExpanded((e) => !e)}
