@@ -5,11 +5,12 @@ A modern countdown timer dashboard to keep track of your services that are curre
 ## Features
 
 - Multiple countdown lists with drag-and-drop organization
+- Note taking textarea for quickly typing down anything
 - Preset duration options for fast timer creation
-- Local storage persistence
-- Import/export lists with JSON file
-- Dark/light theme toggle
 - Responsive design with smooth animations
+- Import/export lists with JSON file
+- Local storage persistence
+- Dark/light theme toggle
 
 ## Getting Started
 
